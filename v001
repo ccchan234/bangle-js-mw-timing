@@ -1,6 +1,6 @@
 // Variables to store the microwave wattages and the input time
-var wattageFrom = 700;
-var wattageTo = 800;
+var wattageFrom = 800;
+var wattageTo = 700;
 var inputTime = 0; // in seconds
 var selectedMinutes = 0;
 
