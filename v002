@@ -1,0 +1,95 @@
+// Variables to store the microwave wattages and the input time
+var wattageFrom = 800;
+var wattageTo = 700;
+var inputTime = 0; // in seconds
+var selectedMinutes = 0;
+
+// Function to convert the time based on wattage
+function convertTime(time, fromWatt, toWatt) {
+  return time * (fromWatt / toWatt);
+}
+
+// Function to display the main screen
+function drawMainScreen() {
+  g.clear();
+  g.setFont("6x8", 1);
+  g.drawString("Convert Microwave Time", 5, 5);
+  g.drawString("From: " + wattageFrom + "W", 5, 20);
+  g.drawString("To: " + wattageTo + "W", 5, 35);
+  g.drawString("Current time: " + inputTime + "s", 5, 50);
+  g.drawString("Converted time: " + Math.round(convertTime(inputTime, wattageFrom, wattageTo)) + " sec", 5, 65);
+  g.drawString("Press to choose time", 5, 80);
+  g.flip();
+}
+
+// Function to show the menu for minute selection
+function showMinuteMenu() {
+  var minuteOptions = {
+    "": { "title": "Choose Minutes" }
+  };
+
+  for (var i = 0; i <= 15; i++) {
+    let minute = i;
+    minuteOptions[minute + "m"] = function() {
+      selectedMinutes = minute;
+      showSecondMenu();
+    };
+  }
+
+  E.showMenu(minuteOptions);
+}
+
+// Function to show the menu for second selection
+function showSecondMenu() {
+  var secondOptions = {
+    "": { "title": "Choose Seconds" }
+  };
+
+  for (var i = 0; i < 60; i++) {
+    let second = i;
+    secondOptions[second + "s"] = function() {
+      inputTime = (selectedMinutes * 60) + second;
+      drawMainScreen();
+    };
+  }
+
+  E.showMenu(secondOptions);
+}
+
+// Function to show the menu for wattage selection
+function showWattageMenu() {
+  var wattageOptions = {
+    "": { "title": "Choose Conversion" },
+    "800W to 700W": function() {
+      wattageFrom = 800;
+      wattageTo = 700;
+      drawMainScreen();
+    },
+    "700W to 800W": function() {
+      wattageFrom = 700;
+      wattageTo = 800;
+      drawMainScreen();
+    }
+  };
+  
+  E.showMenu(wattageOptions);
+}
+
+// Function to handle button presses
+var pressTime;
+
+setWatch(function(e) {
+  pressTime = e.time;
+}, BTN, { repeat: true, edge: "falling" });  // start timer on button down
+
+setWatch(function(e) {
+  var duration = e.time - pressTime;
+  if (duration > 1) {  // if button is held for more than 1 second
+    showWattageMenu();
+  } else {
+    showMinuteMenu();
+  }
+}, BTN, { repeat: true, edge: "rising" });  // check duration on button up
+
+// Draw the main screen on startup
+drawMainScreen();
