@@ -20,7 +20,7 @@ function drawMainScreen() {
   g.drawString("Current time: " + inputTime + "s", 5, 50);
   g.drawString("Converted time: " + Math.round(convertTime(inputTime, wattageFrom, wattageTo)) + " sec", 5, 65);
   g.drawString("Short Press to choose time", 5, 80);
-  g.drawString("Long Press to choose direction", 5, 80);
+  g.drawString("Long Press to choose direction", 5, 95);
   g.flip();
 }
 
